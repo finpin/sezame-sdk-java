@@ -1,0 +1,6 @@
+target
+.mvn
+
+# Intellij IDEA project files
+.idea
+*.iml
