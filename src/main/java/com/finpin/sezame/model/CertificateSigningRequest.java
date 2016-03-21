@@ -1,4 +1,4 @@
-package com.finprin.sezame.model;
+package com.finpin.sezame.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

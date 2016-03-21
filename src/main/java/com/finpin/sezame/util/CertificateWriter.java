@@ -1,4 +1,4 @@
-package com.finprin.sezame.util;
+package com.finpin.sezame.util;
 
 import sun.security.provider.X509Factory;
 import java.io.File;

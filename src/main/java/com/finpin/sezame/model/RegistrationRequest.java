@@ -1,4 +1,4 @@
-package com.finprin.sezame.model;
+package com.finpin.sezame.model;
 
 public class RegistrationRequest {
 

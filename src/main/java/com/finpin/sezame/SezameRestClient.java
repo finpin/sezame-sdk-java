@@ -1,14 +1,14 @@
-package com.finprin.sezame;
+package com.finpin.sezame;
 
-import com.finprin.sezame.model.CertificateSigningRequest;
-import com.finprin.sezame.model.CertificateSigningResponse;
-import com.finprin.sezame.model.LoginRequest;
-import com.finprin.sezame.model.LoginResponse;
-import com.finprin.sezame.model.LoginStatusResponse;
-import com.finprin.sezame.model.PairingRequest;
-import com.finprin.sezame.model.PairingResponse;
-import com.finprin.sezame.model.RegistrationRequest;
-import com.finprin.sezame.model.RegistrationResponse;
+import com.finpin.sezame.model.LoginStatusResponse;
+import com.finpin.sezame.model.PairingRequest;
+import com.finpin.sezame.model.PairingResponse;
+import com.finpin.sezame.model.RegistrationResponse;
+import com.finpin.sezame.model.CertificateSigningRequest;
+import com.finpin.sezame.model.CertificateSigningResponse;
+import com.finpin.sezame.model.LoginRequest;
+import com.finpin.sezame.model.LoginResponse;
+import com.finpin.sezame.model.RegistrationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageConverter;

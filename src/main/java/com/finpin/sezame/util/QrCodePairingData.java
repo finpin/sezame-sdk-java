@@ -1,8 +1,8 @@
-package com.finprin.sezame.util;
+package com.finpin.sezame.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.finprin.sezame.model.PairingResponse;
+import com.finpin.sezame.model.PairingResponse;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QrCodePairingData extends PairingResponse {
