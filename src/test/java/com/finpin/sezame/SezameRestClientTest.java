@@ -68,13 +68,14 @@ public class SezameRestClientTest {
 
     @Test
 	public void shouldRegisterClientApplication() {
+        initiateSslContextForHttpClient(false);
         RegistrationResponse response = client.registerClient(new RegistrationRequest(TEST_REGISTRATION_EMAIL, TEST_SERVICE_NAME));
         log.info(response.toString());
 	}
 
     @Test
     public void givenPairedClient_shouldReturnStatusTrue() {
-        initiateSslContextForHttpClient();
+        initiateSslContextForHttpClient(true);
         PairingRequest pairingRequest = new PairingRequest(TEST_USER_NAME);
         boolean status = client.getPairedClientStatus(pairingRequest);
         assertTrue("Expected status to be paired", status);
@@ -82,7 +83,7 @@ public class SezameRestClientTest {
 
     @Test
     public void givenUnpairedClient_shouldReturnStatusFalse() {
-        initiateSslContextForHttpClient();
+        initiateSslContextForHttpClient(true);
         PairingRequest pairingRequest = new PairingRequest(TEST_USER_NAME_NOT_EXISTING);
         boolean status = client.getPairedClientStatus(pairingRequest);
         assertFalse("Expected status to be unpaired", status);
@@ -90,7 +91,7 @@ public class SezameRestClientTest {
 
     @Test
     public void givenUserLoginAuthorized_shouldReturnStatusTrue() {
-        initiateSslContextForHttpClient();
+        initiateSslContextForHttpClient(true);
         LoginStatusResponse response = client.getLoggedInUserStatus(TEST_USER_LOGIN_AUTH_ID);
         log.info(response.toString());
         assertEquals("Expected status to be logged in", "some", response.getStatus());
@@ -98,7 +99,7 @@ public class SezameRestClientTest {
 
     @Test
     public void givenUserNotAuthorized_whenRequestingLogin_shouldReturnStatusInitiated() {
-        initiateSslContextForHttpClient();
+        initiateSslContextForHttpClient(true);
         LoginRequest loginRequest = new LoginRequest(TEST_USER_NAME);
         loginRequest.setMessage("Call me back @https");
         loginRequest.setTimeout((short) 1440);
@@ -110,6 +111,7 @@ public class SezameRestClientTest {
 
     @Test
     public void shouldGetCertificateAndWriteToFile() throws CertificateException, IOException {
+        initiateSslContextForHttpClient(false);
         String sampleCsr = getSampleCertificateSigningRequest();
         CertificateSigningRequest certificateSigningRequest = new CertificateSigningRequest(sampleCsr, CLIENT_SECRET);
         Certificate certificate = client.getClientCertificate(certificateSigningRequest);
@@ -121,7 +123,7 @@ public class SezameRestClientTest {
 
     @Test
     public void givenUserNotPaired_whenRequestingPairing_shouldReturnIdAndClientCode() throws Exception {
-        initiateSslContextForHttpClient();
+        initiateSslContextForHttpClient(true);
         PairingRequest pairingRequest = new PairingRequest(TEST_USER_NAME);
         PairingResponse pairingResponse = client.pairClient(pairingRequest);
         log.info((pairingResponse.toString()));
@@ -137,7 +139,7 @@ public class SezameRestClientTest {
     public void testSslHandshake() throws IOException {
         // Note: If you have trouble establishing a two-way authenticated SSL connection run this test
         //       with JVM options -Djavax.net.debug=ssl and it will spit out everything going on (handshakes etc.)
-        SSLContext sslContext = initiateSslContextForHttpClient();
+        SSLContext sslContext = initiateSslContextForHttpClient(true);
         SSLSocket socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SezameRestClient.HOST, 443);
         socket.startHandshake();
         assertTrue(socket.isConnected());
@@ -177,9 +179,11 @@ public class SezameRestClientTest {
         }
     }
 
-    private SSLContext initiateSslContextForHttpClient() {
+    private SSLContext initiateSslContextForHttpClient(boolean initiateClientKeyStore) {
         try {
-            client.setClientKeystore(getSampleClientKeystore(), SAMPLE_CLIENT_PKCS12_KEYSTORE__PASSWORD);
+            if (initiateClientKeyStore) {
+                client.setClientKeystore(getSampleClientKeystore(), SAMPLE_CLIENT_PKCS12_KEYSTORE__PASSWORD);
+            }
             client.setServerKeystore(getSampleServerKeystore());
             HttpsURLConnection.setDefaultSSLSocketFactory(client.getSslContext().getSocketFactory());
             return client.getSslContext();

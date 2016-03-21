@@ -14,8 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -147,15 +150,20 @@ public class SezameRestClient {
     private void createSslContextWithClientCertificate()
             throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException, KeyManagementException {
 
-        // TODO: Assert client key store is present
+        KeyManager[] clientKeyManagers = null;
+        if (clientKeyManager != null) {
+            // key store with client certificates
+            clientKeyManagers = clientKeyManager.getKeyManagers();
+        }
+
+        // if TrustManager not set use default trustManagerFactory, usually falling back to "jre/lib/security/cacerts" file distributed with JRE
+        TrustManager[] serverTrustManagers = null;
+        if (trustManagerFactory != null) {
+            // key store with server certificates (usually root CA certificates)
+            serverTrustManagers = trustManagerFactory.getTrustManagers();
+        }
 
         sslContext = SSLContext.getInstance("TLS");
-        if (trustManagerFactory != null) {
-            sslContext.init(clientKeyManager.getKeyManagers(), trustManagerFactory.getTrustManagers(), new java.security.SecureRandom());
-        }
-        else {
-            // use default trustManagerFactory, usually falling back to "jre/lib/security/cacerts" file distributed with JRE
-            sslContext.init(clientKeyManager.getKeyManagers(), null, new java.security.SecureRandom());
-        }
+        sslContext.init(clientKeyManagers, serverTrustManagers, new java.security.SecureRandom());
     }
 }
