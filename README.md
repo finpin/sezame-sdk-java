@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Ensure Java 8 JDK and Maven 3.x are installed and added to the environment path.
+Ensure Java 7 JDK and Maven 3.x are installed and added to the environment path.
 
 ## Build
 
