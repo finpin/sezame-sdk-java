@@ -2,6 +2,7 @@ package com.finpin.sezame;
 
 import com.finpin.sezame.model.CertificateSigningRequest;
 import com.finpin.sezame.model.LoginRequest;
+import com.finpin.sezame.model.LoginRequest.LoginType;
 import com.finpin.sezame.model.LoginResponse;
 import com.finpin.sezame.model.LoginStatusResponse;
 import com.finpin.sezame.model.PairingRequest;
@@ -103,7 +104,7 @@ public class SezameRestClientTest {
         LoginRequest loginRequest = new LoginRequest(TEST_USER_NAME);
         loginRequest.setMessage("Call me back @https");
         loginRequest.setTimeout((short) 1440);
-        loginRequest.setType("auth");
+        loginRequest.setType(LoginType.AUTHENTICATE);
         loginRequest.setCallbackUrl("https://mockbin.org/bin/08f77946-1af7-4873-9312-9de3e209528b");
         LoginResponse loginResponse = client.loginUser(loginRequest);
         log.info(loginResponse.toString());

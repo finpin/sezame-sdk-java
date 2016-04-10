@@ -2,16 +2,33 @@ package com.finpin.sezame.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class LoginRequest {
+
+    public enum LoginType {
+        AUTHENTICATE("auth"),
+        FRAUD("fraud");
+
+        private final String type;
+
+        LoginType(final String type) {
+            this.type = type;
+        }
+
+        @JsonValue
+        @Override
+        public String toString() {
+            return type;
+        }
+    }
 
     @JsonProperty("username")
     private String userName;
 
     private String message;
-    private String type;
+    private LoginType type;
 
     @JsonProperty("callback")
     private String callbackUrl;
@@ -31,11 +48,11 @@ public class LoginRequest {
         this.userName = userName;
     }
 
-    public String getType() {
+    public LoginType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(LoginType type) {
         this.type = type;
     }
 
